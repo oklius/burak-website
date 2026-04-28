@@ -1,44 +1,67 @@
-import { NextResponse } from "next/server";
-import { sendContactEmail } from "@/lib/mailer";
+import { Resend } from "resend";
 
-export async function POST(request: Request) {
-  const formData = await request.formData();
-  const name = String(formData.get("name") || "").trim();
-  const email = String(formData.get("email") || "").trim();
-  const message = String(formData.get("message") || "").trim();
-  const file = formData.get("attachment");
+const resend = new Resend(process.env.RESEND_API_KEY);
+const recipientEmail = "burakozturkmee@gmail.com";
 
-  if (name.length < 2 || !email.includes("@") || message.length < 10) {
-    return NextResponse.json(
-      { error: "Please provide a valid name, email, and message." },
-      { status: 400 },
-    );
-  }
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-  let attachment:
-    | { filename: string; content: Buffer; contentType?: string }
-    | undefined;
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  if (file instanceof File && file.size > 0) {
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: "Please keep attachments under 5 MB." },
+export async function POST(req: Request) {
+  try {
+    const { name, email, message } = await req.json();
+    const cleanName = typeof name === "string" ? name.trim() : "";
+    const cleanEmail = typeof email === "string" ? email.trim() : "";
+    const cleanMessage = typeof message === "string" ? message.trim() : "";
+
+    if (!cleanName || !cleanEmail || !cleanMessage) {
+      return Response.json({ error: "Missing fields" }, { status: 400 });
+    }
+
+    if (!isValidEmail(cleanEmail)) {
+      return Response.json(
+        { error: "Please provide a valid email address." },
         { status: 400 },
       );
     }
 
-    attachment = {
-      filename: file.name,
-      content: Buffer.from(await file.arrayBuffer()),
-      contentType: file.type,
-    };
+    if (!process.env.RESEND_API_KEY) {
+      return Response.json(
+        { error: "Email service is not configured." },
+        { status: 500 },
+      );
+    }
+
+    await resend.emails.send({
+      from: "Contact Form <onboarding@resend.dev>",
+      to: recipientEmail,
+      subject: `New message from ${cleanName}`,
+      replyTo: cleanEmail,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
+        <p><strong>Message:</strong></p>
+        <p>${escapeHtml(cleanMessage).replaceAll("\n", "<br />")}</p>
+      `,
+    });
+
+    return Response.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Contact form error", error);
+
+    return Response.json(
+      { error: "Something went wrong" },
+      { status: 500 },
+    );
   }
-
-  const result = await sendContactEmail({ name, email, message, attachment });
-
-  return NextResponse.json({
-    message: result.skipped
-      ? "Thanks. SMTP is not configured yet, so this was logged locally."
-      : "Thanks. Your message has been sent.",
-  });
 }

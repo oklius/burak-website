@@ -20,11 +20,17 @@ export default function ContactForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const name = String(formData.get("name") || "");
+    const email = String(formData.get("email") || "");
+    const bodyMessage = String(formData.get("message") || "");
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message: bodyMessage }),
       });
       const payload = await response.json();
 
@@ -33,7 +39,7 @@ export default function ContactForm() {
       }
 
       setStatus("success");
-      setMessage(payload.message || "Thanks. Your message has been sent.");
+      setMessage("Message sent successfully");
       form.reset();
     } catch (error) {
       setStatus("error");

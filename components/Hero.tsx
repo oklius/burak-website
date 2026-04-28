@@ -74,14 +74,14 @@ export default function Hero() {
           transition={{ duration: 0.55, delay: 0.15, ease: "easeOut" }}
           className="relative mx-auto w-full max-w-md"
         >
-          <div className="relative mx-auto aspect-square max-w-sm overflow-hidden rounded-full border border-border bg-surface shadow-2xl shadow-foreground/10">
+          <div className="relative mx-auto h-40 w-40 overflow-hidden rounded-full border border-neutral-200 bg-surface shadow-xl md:h-56 md:w-56 dark:border-neutral-800">
             <Image
-              src="/headshot-placeholder.svg"
-              alt="Professional placeholder portrait for Burak Öztürk"
+              src="/pp.png"
+              alt="Burak Öztürk profile photo"
               fill
-              priority
-              sizes="(max-width: 1024px) 80vw, 384px"
-              className="object-cover"
+              priority={true}
+              sizes="(max-width: 768px) 160px, 224px"
+              className="rounded-full object-cover"
             />
           </div>
           <Card className="absolute -bottom-4 left-0 right-0 mx-auto w-[min(92%,360px)] p-4">
