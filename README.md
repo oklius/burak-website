@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Burak Öztürk Personal Website
 
-## Getting Started
+Next.js app-router portfolio site for Burak Öztürk, focused on performance
+marketing, product growth, consulting credibility, and recruiter-ready work
+history.
 
-First, run the development server:
+## Stack
+
+- Next.js 16, React 19, TypeScript
+- Tailwind CSS 4 with dark mode
+- shadcn-style local UI primitives in `components/ui`
+- Lucide React icons
+- Framer Motion micro-animations
+- MDX blog support with `@next/mdx`
+- Recharts case-study metric snapshots
+- Nodemailer-backed contact API route
+
+## Setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and fill in values as needed.
 
-## Learn More
+```bash
+NEXT_PUBLIC_GA_ID=
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+CONTACT_TO_EMAIL=burakozturkmee@gmail.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+If SMTP variables are not set, `/api/contact` validates submissions and logs
+them locally instead of sending email.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Case studies and core site content live in `lib/data.ts`.
+- Blog posts live in `content/blog/*.mdx` and are registered in
+  `content/blog/posts.ts`.
+- The CV download is served from
+  `public/BurakOzturk_Resume_CV_2026.pdf`.
+- Replace `public/headshot-placeholder.svg` with a real professional headshot
+  when available.
 
-## Deploy on Vercel
+## Useful Commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+npm run build
+npm run start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The project is ready for Vercel. Add the environment variables in the Vercel
+dashboard, then deploy the repository. `vercel.json` declares the Next.js
+framework explicitly.

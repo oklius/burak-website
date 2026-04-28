@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-label="Professional headshot placeholder">
+  <rect width="900" height="900" fill="#d9e0e8"/>
+  <rect x="0" y="520" width="900" height="380" fill="#0f766e"/>
+  <circle cx="450" cy="322" r="148" fill="#f8fafc"/>
+  <path d="M198 900c18-164 121-286 252-286s234 122 252 286H198z" fill="#171717"/>
+  <path d="M300 302c23-108 93-168 164-156 65 11 116 62 132 140-52-34-92-45-151-44-58 1-99 17-145 60z" fill="#171717"/>
+  <circle cx="397" cy="336" r="14" fill="#171717"/>
+  <circle cx="503" cy="336" r="14" fill="#171717"/>
+  <path d="M393 418c37 28 80 28 116 0" fill="none" stroke="#171717" stroke-width="18" stroke-linecap="round"/>
+  <path d="M347 612h206l-40 288H387l-40-288z" fill="#f8fafc"/>
+  <path d="M0 0h900v900H0z" fill="none"/>
+</svg>
