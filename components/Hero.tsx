@@ -81,7 +81,7 @@ export default function Hero() {
               fill
               priority={true}
               sizes="(max-width: 768px) 160px, 224px"
-              className="rounded-full object-cover"
+              className="rounded-full object-cover object-center md:object-[50%_10%]"
             />
           </div>
           <Card className="absolute -bottom-4 left-0 right-0 mx-auto w-[min(92%,360px)] p-4">
