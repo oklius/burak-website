@@ -1,26 +1,13 @@
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const recipientEmail = "burakozturkmee@gmail.com";
-
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 export async function POST(req: Request) {
   try {
-    const { name, email, message } = await req.json();
+    const { name, email, subject, message } = await req.json();
     const cleanName = typeof name === "string" ? name.trim() : "";
     const cleanEmail = typeof email === "string" ? email.trim() : "";
+    const cleanSubject = typeof subject === "string" ? subject.trim() : "";
     const cleanMessage = typeof message === "string" ? message.trim() : "";
 
     if (!cleanName || !cleanEmail || !cleanMessage) {
@@ -34,25 +21,12 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!process.env.RESEND_API_KEY) {
-      return Response.json(
-        { error: "Email service is not configured." },
-        { status: 500 },
-      );
-    }
-
-    await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>",
-      to: recipientEmail,
-      subject: `New message from ${cleanName}`,
-      replyTo: cleanEmail,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(cleanMessage).replaceAll("\n", "<br />")}</p>
-      `,
+    // TODO: Connect real email delivery later via Resend, Formspree, or SMTP.
+    console.log("Contact form submission", {
+      name: cleanName,
+      email: cleanEmail,
+      subject: cleanSubject,
+      message: cleanMessage,
     });
 
     return Response.json({ success: true }, { status: 200 });
